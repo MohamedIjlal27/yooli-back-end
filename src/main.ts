@@ -48,11 +48,28 @@ async function bootstrap() {
     .addTag('users', 'User management endpoints')
     .addTag('messages', 'Messaging endpoints')
     .addTag('calls', 'WebRTC calling endpoints')
+    .addTag('meetings', 'Meeting management endpoints')
+    .addTag('turn', 'TURN server endpoints')
     .addTag('notifications', 'Push notification endpoints')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api/docs', app, document);
+  
+  // Configure Swagger for serverless deployment
+  SwaggerModule.setup('api/docs', app, document, {
+    swaggerOptions: {
+      persistAuthorization: true,
+    },
+    customSiteTitle: 'Yooli API Documentation',
+    customfavIcon: '/favicon.ico',
+    customJs: [
+      'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-bundle.min.js',
+      'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-standalone-preset.min.js',
+    ],
+    customCssUrl: [
+      'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui.min.css',
+    ],
+  });
 
   const port = configService.get('PORT') || 3000;
   await app.listen(port);

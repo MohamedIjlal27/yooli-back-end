@@ -9,8 +9,12 @@
   ],
   "routes": [
     {
+      "src": "/api/docs/(.*)",
+      "dest": "/"
+    },
+    {
       "src": "/(.*)",
-      "dest": "dist/main.js"
+      "dest": "/"
     }
   ],
   "env": {

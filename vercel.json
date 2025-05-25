@@ -1,8 +1,9 @@
 {
   "version": 2,
+  "name": "yooli-backend",
   "builds": [
     {
-      "src": "dist/main.js",
+      "src": "package.json",
       "use": "@vercel/node"
     }
   ],
@@ -15,9 +16,6 @@
   "env": {
     "NODE_ENV": "production"
   },
-  "functions": {
-    "dist/main.js": {
-      "maxDuration": 30
-    }
-  }
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist"
 } 

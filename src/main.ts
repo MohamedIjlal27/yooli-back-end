@@ -14,10 +14,10 @@ async function bootstrap() {
   app.use(helmet());
   app.use(compression());
 
-  // CORS configuration
-  const corsOrigins = configService.get('CORS_ORIGIN')?.split(',') || ['http://localhost:8081'];
+  // CORS configuration for mobile app
+  // Mobile apps don't have CORS restrictions like web browsers
   app.enableCors({
-    origin: corsOrigins,
+    origin: true, // Allow all origins for mobile apps
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],

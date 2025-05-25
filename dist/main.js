@@ -12,7 +12,11 @@ async function bootstrap() {
     const configService = app.get(config_1.ConfigService);
     app.use((0, helmet_1.default)());
     app.use(compression());
-    const corsOrigins = configService.get('CORS_ORIGIN')?.split(',') || ['http://localhost:8081'];
+    const corsOrigins = configService.get('CORS_ORIGIN')?.split(',') || [
+        'http://localhost:8081',
+        'http://localhost:3000',
+        'https://yooli-frontend.vercel.app'
+    ];
     app.enableCors({
         origin: corsOrigins,
         credentials: true,

@@ -7,7 +7,7 @@ const config_1 = require("@nestjs/config");
 const compression = require("compression");
 const helmet_1 = require("helmet");
 const app_module_1 = require("./app.module");
-async function bootstrap() {
+async function createApp() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     const configService = app.get(config_1.ConfigService);
     app.use((0, helmet_1.default)());
@@ -55,10 +55,23 @@ async function bootstrap() {
             'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui.min.css',
         ],
     });
+    return app;
+}
+async function bootstrap() {
+    const app = await createApp();
+    const configService = app.get(config_1.ConfigService);
     const port = configService.get('PORT') || 3000;
     await app.listen(port);
     console.log(`🚀 Application is running on: http://localhost:${port}`);
     console.log(`📚 API Documentation: http://localhost:${port}/api/docs`);
 }
-bootstrap();
+exports.default = async (req, res) => {
+    const app = await createApp();
+    await app.init();
+    const expressApp = app.getHttpAdapter().getInstance();
+    return expressApp(req, res);
+};
+if (require.main === module) {
+    bootstrap();
+}
 //# sourceMappingURL=main.js.map

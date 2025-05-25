@@ -6,7 +6,7 @@ import * as compression from 'compression';
 import helmet from 'helmet';
 import { AppModule } from './app.module';
 
-async function bootstrap() {
+async function createApp() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
 
@@ -71,6 +71,12 @@ async function bootstrap() {
     ],
   });
 
+  return app;
+}
+
+async function bootstrap() {
+  const app = await createApp();
+  const configService = app.get(ConfigService);
   const port = configService.get('PORT') || 3000;
   await app.listen(port);
 
@@ -78,4 +84,15 @@ async function bootstrap() {
   console.log(`📚 API Documentation: http://localhost:${port}/api/docs`);
 }
 
-bootstrap(); 
+// For Vercel serverless deployment
+export default async (req, res) => {
+  const app = await createApp();
+  await app.init();
+  const expressApp = app.getHttpAdapter().getInstance();
+  return expressApp(req, res);
+};
+
+// For local development
+if (require.main === module) {
+  bootstrap();
+} 

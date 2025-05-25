@@ -37,6 +37,35 @@ __decorate([
 HealthController = __decorate([
     (0, common_1.Controller)()
 ], HealthController);
+let RootController = class RootController {
+    getRoot() {
+        return {
+            message: 'Yooli Backend API',
+            version: '1.0.0',
+            status: 'running',
+            timestamp: new Date().toISOString(),
+            endpoints: {
+                health: '/api/v1/health',
+                docs: '/api/docs',
+                auth: '/api/v1/auth',
+                users: '/api/v1/users',
+                messages: '/api/v1/messages',
+                calls: '/api/v1/calls',
+                meetings: '/api/v1/meetings',
+                turn: '/api/v1/turn'
+            }
+        };
+    }
+};
+__decorate([
+    (0, common_1.Get)(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], RootController.prototype, "getRoot", null);
+RootController = __decorate([
+    (0, common_1.Controller)()
+], RootController);
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -55,7 +84,7 @@ exports.AppModule = AppModule = __decorate([
             meetings_module_1.MeetingsModule,
             notifications_module_1.NotificationsModule,
         ],
-        controllers: [HealthController],
+        controllers: [HealthController, RootController],
         providers: [],
     })
 ], AppModule);

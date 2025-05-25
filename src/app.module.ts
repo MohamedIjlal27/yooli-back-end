@@ -21,6 +21,29 @@ class HealthController {
   }
 }
 
+@Controller()
+class RootController {
+  @Get()
+  getRoot() {
+    return {
+      message: 'Yooli Backend API',
+      version: '1.0.0',
+      status: 'running',
+      timestamp: new Date().toISOString(),
+      endpoints: {
+        health: '/api/v1/health',
+        docs: '/api/docs',
+        auth: '/api/v1/auth',
+        users: '/api/v1/users',
+        messages: '/api/v1/messages',
+        calls: '/api/v1/calls',
+        meetings: '/api/v1/meetings',
+        turn: '/api/v1/turn'
+      }
+    };
+  }
+}
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -35,7 +58,7 @@ class HealthController {
     MeetingsModule,
     NotificationsModule,
   ],
-  controllers: [HealthController],
+  controllers: [HealthController, RootController],
   providers: [],
 })
 export class AppModule {} 

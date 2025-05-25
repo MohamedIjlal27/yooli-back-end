@@ -2,7 +2,6 @@ import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
-import * as compression from 'compression';
 import helmet from 'helmet';
 import { AppModule } from './app.module';
 
@@ -10,9 +9,18 @@ async function createApp() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
 
-  // Security middleware
-  app.use(helmet());
-  app.use(compression());
+  // Security middleware with relaxed CSP for Swagger
+  app.use(helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        styleSrc: ["'self'", "'unsafe-inline'", "https://cdnjs.cloudflare.com"],
+        scriptSrc: ["'self'", "'unsafe-inline'", "https://cdnjs.cloudflare.com"],
+        imgSrc: ["'self'", "data:", "https:"],
+      },
+    },
+  }));
+  // Note: Compression middleware temporarily disabled for serverless compatibility
 
   // CORS configuration for mobile app
   // Mobile apps don't have CORS restrictions like web browsers
@@ -61,13 +69,12 @@ async function createApp() {
       persistAuthorization: true,
     },
     customSiteTitle: 'Yooli API Documentation',
-    customfavIcon: '/favicon.ico',
+    customCssUrl: [
+      'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui.min.css',
+    ],
     customJs: [
       'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-bundle.min.js',
       'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-standalone-preset.min.js',
-    ],
-    customCssUrl: [
-      'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui.min.css',
     ],
   });
 
